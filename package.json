@@ -15,5 +15,9 @@
     "hyperflow-plugin"
   ],
   "author": "Krystian Pawlik <krysp89@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "aws-sdk": "2.247.1",
+    "influxdb-nodejs":"2.7.6"
+  }
 }
