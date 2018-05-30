@@ -1,0 +1,19 @@
+{
+  "name": "hyperflow-ecs-monitoring-plugin",
+  "version": "0.0.1",
+  "description": "Hyperflow ecs monitoring plugin",
+  "main": "index.js",
+  "scripts": {
+    "test": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dice-cyfronet/hyperflow-ecs-monitoring-plugin.git"
+  },
+  "keywords": [
+    "hyperflow",
+    "hyperflow-plugin"
+  ],
+  "author": "Krystian Pawlik <krysp89@gmail.com>",
+  "license": "MIT"
+}
