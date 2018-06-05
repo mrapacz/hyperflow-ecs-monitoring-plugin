@@ -16,26 +16,20 @@ MonitoringEcsPlugin.prototype.storeEcsData = function()
     that.getEcsData();
 }
 
-function CDL(countdown, completion) {
-    this.signal = function() { 
-        if(--countdown < 1) completion(); 
-    };
-}
-
-MonitoringEcsPlugin.prototype.sendDataToDatabase=function(data)
+MonitoringEcsPlugin.prototype.writeDataToDatabase=function(metric, data)
 {
-    console.log("json %j",data);
-    
+    //console.log("json %s %j",metric,data);
     const client = new Influx(config.metricCollector);
 
     data["wfid"] = that.getWfId();
     data["hfId"] = that.getHfId();
 
-    client.write('hyperflow_ecs_monitor')
+    client.write(metric)
     .field(data)
-    .then(() => console.info('write point success'))
+    .then(() => true)
     .catch(console.error);
 }
+
 
 MonitoringEcsPlugin.prototype.getEcsData = function()
 {
@@ -44,30 +38,36 @@ MonitoringEcsPlugin.prototype.getEcsData = function()
     var configAws={accessKeyId: config.awsAccessKey, secretAccessKey: config.awsSecretAccessKey,region: config.awsRegion};
 
     var ecs = new AWS.ECS(configAws);
+    var cloudwatch = new AWS.CloudWatch(configAws);
+
     var dataToStore ={};
     
-    var latch = new CDL(2, function() {
-        that.sendDataToDatabase(dataToStore)
-    });
     var params = {cluster:config.clusterName};
     ecs.listContainerInstances(params, function(err, data) {
         if (err) console.log(err, err.stack);
         else
         {
           containerCount=data.containerInstanceArns.length;
-          dataToStore["containerCount"] = containerCount;
-          console.log("containe instances %d",dataToStore["containerCount"]);
-          latch.signal();
+
+          that.writeDataToDatabase("hyperflow_ecs_monitor_container",{containerInstanceCount:containerCount})
         }
     });
 
     ecs.listTasks(params, function(err, data) {
         if (err) console.log(err, err.stack); 
         else{
-          taskCount=data.taskArns.length;
-          dataToStore["taskCount"]=taskCount;
-          latch.signal();
-          console.log("taskCount %d",dataToStore["taskCount"]);
+           taskCount=data.taskArns.length;
+
+          that.writeDataToDatabase("hyperflow_ecs_monitor_tasks",{tasksCount: taskCount})
+        }
+    });
+
+    cloudwatch.waitFor('alarmExists', function(err, data) {
+        if (err) console.log(err, err.stack); // an error occurred
+        else{
+          AlarmLowValue = data.MetricAlarms[0].StateValue;
+          AlarmHightValue = data.MetricAlarms[1].StateValue;
+          that.writeDataToDatabase("hyperflow_ecs_monitor_alarms",{alarmLowValue: AlarmLowValue, alarmHightValue:AlarmHightValue});
         }
     });
 }
