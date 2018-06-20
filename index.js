@@ -16,6 +16,7 @@ MonitoringEcsPlugin.prototype.storeEcsData = function()
     that.getEcsData();
 }
 
+
 MonitoringEcsPlugin.prototype.writeDataToDatabase=function(metric, data)
 {
     //console.log("json %s %j",metric,data);
@@ -70,6 +71,220 @@ MonitoringEcsPlugin.prototype.getEcsData = function()
           that.writeDataToDatabase("hyperflow_ecs_monitor_alarms",{alarmLowValue: AlarmLowValue, alarmHightValue:AlarmHightValue});
         }
     });
+
+    //cloudwatch.
+    var endTime = new Date();
+    var startTime=new Date(endTime - 1000000);
+    
+
+    console.log(startTime);
+    
+    console.log(endTime);
+    
+      var paramsCpuCluster = {
+        EndTime: endTime, /* required */
+        MetricName: "CPUUtilization", /* required */
+        Namespace: "AWS/ECS", /* required */
+        Period: 60, /* required */
+        StartTime: startTime, /* required */
+        Dimensions: [
+          {
+             "Name": "ClusterName",
+             "Value": "ecs_test_cluster_hyperflow"
+          }
+          /* more items */
+        ],
+
+        Statistics: [
+           "Average"
+        ],
+      };
+
+
+      cloudwatch.getMetricStatistics(paramsCpuCluster, function(err, data) {
+        if (err) console.log(err, err.stack); // an error occurred
+        else
+        {
+            var value = data.Datapoints[data.Datapoints.length-1].Average
+            console.log(data.Datapoints[data.Datapoints.length-1]);   
+            that.writeDataToDatabase("hyperflow_cluster_cpu",{ precentageCPU:  value});
+        }
+      });
+
+      var paramsCpuWorkers = {
+        EndTime: endTime, /* required */
+        MetricName: "CPUUtilization", /* required */
+        Namespace: "AWS/ECS", /* required */
+        Period: 60, /* required */
+        StartTime: startTime, /* required */
+        Dimensions: [
+            {
+                "Name": "ServiceName",
+                "Value": "hyperflow-service-worker"
+            },
+            {
+                "Name": "ClusterName",
+                "Value": "ecs_test_cluster_hyperflow"
+            }
+          /* more items */
+        ],
+
+        Statistics: [
+           "Average"
+        ],
+      };
+
+
+      cloudwatch.getMetricStatistics(paramsCpuWorkers, function(err, data) {
+        if (err) console.log(err, err.stack); // an error occurred
+        else
+        {
+                    // successful response
+            var value = data.Datapoints[data.Datapoints.length-1].Average
+            console.log(data.Datapoints[data.Datapoints.length-1]);   
+            that.writeDataToDatabase("hyperflow_worker_cpu",{ precentageCPU:  value});
+        }
+      });
+
+
+      var paramsCpuMaster = {
+        EndTime: endTime, /* required */
+        MetricName: "CPUUtilization", /* required */
+        Namespace: "AWS/ECS", /* required */
+        Period: 60, /* required */
+        StartTime: startTime, /* required */
+        Dimensions: [
+            {
+                "Name": "ServiceName",
+                "Value": "hyperflow-service-master"
+            },
+            {
+                "Name": "ClusterName",
+                "Value": "ecs_test_cluster_hyperflow"
+            }
+          /* more items */
+        ],
+
+        Statistics: [
+           "Average"
+        ],
+      };
+
+
+      cloudwatch.getMetricStatistics(paramsCpuMaster, function(err, data) {
+        if (err) console.log(err, err.stack); // an error occurred
+        else
+        {
+                    // successful response
+            var value = data.Datapoints[data.Datapoints.length-1].Average
+            //var time =  new Date(data.Datapoints[data.Datapoints.length-1].Timestamp)
+            console.log(data.Datapoints[data.Datapoints.length-1]);   
+            that.writeDataToDatabase("hyperflow_master_cpu",{ precentageCPU:  value});
+        }
+      });
+
+///////////////////////////////////////////////////////////////
+      var paramsCpuCluster = {
+        EndTime: endTime, /* required */
+        MetricName: "MemoryUtilization", /* required */
+        Namespace: "AWS/ECS", /* required */
+        Period: 60, /* required */
+        StartTime: startTime, /* required */
+        Dimensions: [
+          {
+             "Name": "ClusterName",
+             "Value": "ecs_test_cluster_hyperflow"
+          }
+          /* more items */
+        ],
+
+        Statistics: [
+           "Average"
+        ],
+      };
+
+
+      cloudwatch.getMetricStatistics(paramsCpuCluster, function(err, data) {
+        if (err) console.log(err, err.stack); // an error occurred
+        else
+        {
+            var value = data.Datapoints[data.Datapoints.length-1].Average
+            console.log(data.Datapoints[data.Datapoints.length-1]);   
+            that.writeDataToDatabase("hyperflow_cluster_memory",{ precentageCPU:  value});
+        }
+      });
+
+      var paramsCpuWorkers = {
+        EndTime: endTime, /* required */
+        MetricName: "MemoryUtilization", /* required */
+        Namespace: "AWS/ECS", /* required */
+        Period: 60, /* required */
+        StartTime: startTime, /* required */
+        Dimensions: [
+            {
+                "Name": "ServiceName",
+                "Value": "hyperflow-service-worker"
+            },
+            {
+                "Name": "ClusterName",
+                "Value": "ecs_test_cluster_hyperflow"
+            }
+          /* more items */
+        ],
+
+        Statistics: [
+           "Average"
+        ],
+      };
+
+
+      cloudwatch.getMetricStatistics(paramsCpuWorkers, function(err, data) {
+        if (err) console.log(err, err.stack); // an error occurred
+        else
+        {
+                    // successful response
+            var value = data.Datapoints[data.Datapoints.length-1].Average
+            console.log(data.Datapoints[data.Datapoints.length-1]);   
+            that.writeDataToDatabase("hyperflow_worker_memory",{ precentageCPU:  value});
+        }
+      });
+
+
+      var paramsCpuMaster = {
+        EndTime: endTime, /* required */
+        MetricName: "MemoryUtilization", /* required */
+        Namespace: "AWS/ECS", /* required */
+        Period: 60, /* required */
+        StartTime: startTime, /* required */
+        Dimensions: [
+            {
+                "Name": "ServiceName",
+                "Value": "hyperflow-service-master"
+            },
+            {
+                "Name": "ClusterName",
+                "Value": "ecs_test_cluster_hyperflow"
+            }
+          /* more items */
+        ],
+
+        Statistics: [
+           "Average"
+        ],
+      };
+
+
+      cloudwatch.getMetricStatistics(paramsCpuMaster, function(err, data) {
+        if (err) console.log(err, err.stack); // an error occurred
+        else
+        {
+                    // successful response
+            var value = data.Datapoints[data.Datapoints.length-1].Average
+            //var time =  new Date(data.Datapoints[data.Datapoints.length-1].Timestamp)
+            console.log(data.Datapoints[data.Datapoints.length-1]);   
+            that.writeDataToDatabase("hyperflow_master_memory",{ precentageCPU:  value});
+        }
+      });
 }
 
 
