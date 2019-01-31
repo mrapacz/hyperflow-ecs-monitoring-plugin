@@ -6,7 +6,7 @@ var AWS = require('aws-sdk');
 const Influx = require('influxdb-nodejs');
 
 var config = require('./hyperflowMonitoringEcsPlugin.config.js');
-var pushGateWay = prometheus.Pushgateway(config.prometheusPushGateway);
+var pushGateWay = new prometheus.Pushgateway(config.prometheusPushGateway);
 var metrics = {};
 
 var MonitoringEcsPlugin = function () {
