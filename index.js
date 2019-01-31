@@ -27,7 +27,7 @@ MonitoringEcsPlugin.prototype.writeDataToPrometheus = function (metric, value, l
         },
         value
     );
-    prometheusPushGateway.push({jobName: 'hyperflow-ecs-monitoring-plugin'}, () => {
+    pushGateWay.push({jobName: 'hyperflow-ecs-monitoring-plugin'}, () => {
     });
 };
 
