@@ -10,7 +10,7 @@ var AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY ? process.env.AWS_
 var AWS_REGION = process.env.AWS_REGION ? process.env.AWS_REGION : 'us-east-1';
 var CLUSTER_NAME = process.env.CLUSTER_NAME ? process.env.CLUSTER_NAME : 'ecs_test_cluster_hyperflow';
 
-var PROMETHEUS_PUSH_GATEWAY = process.env.PROMETHEUS_PUSH_GATEWAY ? process.env.PROMETHEUS_PUSH_GATEWAY : 'localhost:9091';
+var PROMETHEUS_PUSH_GATEWAY = process.env.PROMETHEUS_PUSH_GATEWAY ? process.env.PROMETHEUS_PUSH_GATEWAY : 'http://localhost:9091';
 
 module.exports = {
     metricCollector: METRIC_COLLECTOR,
