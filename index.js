@@ -8,6 +8,8 @@ const Influx = require('influxdb-nodejs');
 var config = require('./hyperflowMonitoringEcsPlugin.config.js');
 var pushGateWay = new prometheus.Pushgateway(config.prometheusPushGateway);
 var metrics = {};
+pushGateWay.push({jobName: 'test-plugin'}, () => {
+});
 
 var MonitoringEcsPlugin = function () {
 };
@@ -386,11 +388,14 @@ MonitoringEcsPlugin.prototype.init = function (rcl, wflib, engine) {
     if (this.hasOwnProperty('initialized') && this.initialized === true) {
         return;
     }
+
+
     this.rcl = rcl;
     this.wflib = wflib;
     this.engine = engine;
 
     var that = this;
+    throw "is working"
     setInterval(function () {
         that.storeEcsData();
     }, 1000);
