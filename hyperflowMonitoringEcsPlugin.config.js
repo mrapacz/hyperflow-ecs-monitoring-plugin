@@ -1,4 +1,4 @@
-var METRIC_COLLECTOR = process.env.METRIC_COLLECTOR ? process.env.METRIC_COLLECTOR : 'localhost:9002';
+var METRIC_COLLECTOR = process.env.METRIC_COLLECTOR ? process.env.METRIC_COLLECTOR : 'localhost:9100';
 var METRIC_COLLECTOR_TYPE = process.env.METRIC_COLLECTOR_TYPE ? process.env.METRIC_COLLECTOR_TYPE : 'visor';
 var SERVER_NAME = process.env.SERVER_NAME ? process.env.SERVER_NAME : 'HyperFlow';
 var AMQP_URL = process.env.AMQP_URL ? process.env.AMQP_URL : "amqp://localhost:5672";
@@ -8,7 +8,9 @@ var RABBITMQ_PASSWORD = process.env.RABBITMQ_PASSWORD ? process.env.RABBITMQ_PAS
 var AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID ? process.env.AWS_ACCESS_KEY_ID : "";
 var AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY ? process.env.AWS_SECRET_ACCESS_KEY : "";
 var AWS_REGION = process.env.AWS_REGION ? process.env.AWS_REGION : 'us-east-1';
-var CLUSTER_NAME = process.env.CLUSTER_NAME ? process.env.CLUSTER_NAME :  'ecs_test_cluster_hyperflow';
+var CLUSTER_NAME = process.env.CLUSTER_NAME ? process.env.CLUSTER_NAME : 'ecs_test_cluster_hyperflow';
+
+var PROMETHEUS_PUSH_GATEWAY = process.env.PROMETHEUS_PUSH_GATEWAY ? process.env.PROMETHEUS_PUSH_GATEWAY : 'localhost:9091';
 
 module.exports = {
     metricCollector: METRIC_COLLECTOR,
@@ -17,8 +19,9 @@ module.exports = {
     amqpURL: AMQP_URL,
     rabbitmqUser: RABBITMQ_USER,
     rabbitmqPassword: RABBITMQ_PASSWORD,
-    awsAccessKey : AWS_ACCESS_KEY_ID,
-    awsSecretAccessKey : AWS_SECRET_ACCESS_KEY,
+    awsAccessKey: AWS_ACCESS_KEY_ID,
+    awsSecretAccessKey: AWS_SECRET_ACCESS_KEY,
     awsRegion: AWS_REGION,
-    clusterName:CLUSTER_NAME
+    clusterName: CLUSTER_NAME,
+    prometheusPushGateway: PROMETHEUS_PUSH_GATEWAY
 };
